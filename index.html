@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>CRUD Buku</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body>
+    <div ng-app="bookApp">
+        <div ng-controller="BookController">
+            <h1>Daftar Buku</h1>
+
+            <ul>
+                <li ng-repeat="book in books">
+                    {{ book.title }} - {{ book.author }}
+                    <button ng-click="editBook(book)">Edit</button>
+                    <button ng-click="deleteBook(book)">Delete</button>
+                </li>
+            </ul>
+
+            <h2>Tambah Buku Baru</h2>
+
+            <form>
+                <input type="text" ng-model="newBook.title" placeholder="Judul">
+                <input type="text" ng-model="newBook.author" placeholder="Penulis">
+                <button ng-click="addBook()">Tambah Buku</button>
+            </form>
+
+            <h2>Edit Buku</h2>
+
+            <form>
+                <input type="text" ng-model="selectedBook.title" placeholder="Judul">
+                <input type="text" ng-model="selectedBook.author" placeholder="Penulis">
+                <input type="hidden" ng-model="selectedBook.id">
+                <button ng-click="updateBook()">Update Buku</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        angular.module('bookApp', []).controller('BookController', function ($scope) {
+            var books = [{
+                    id: 1,
+                    title: 'Buku 1',
+                    author: 'Penulis 1'
+                },
+                {
+                    id: 2,
+                    title: 'Buku 2',
+                    author: 'Penulis 2'
+                },
+                // Tambahkan buku-buku lainnya di sini
+            ];
+
+            $scope.books = books;
+            $scope.newBook = {};
+            $scope.selectedBook = {};
+
+            $scope.addBook = function () {
+                $scope.books.push($scope.newBook);
+                $scope.newBook = {};
+            };
+
+            $scope.deleteBook = function (book) {
+                var index = $scope.books.indexOf(book);
+                $scope.books.splice(index, 1);
+            };
+
+            $scope.editBook = function (book) {
+                $scope.selectedBook = angular.copy(book);
+            };
+
+            $scope.updateBook = function () {
+                var index = $scope.books.findIndex(function (book) {
+                    return book.id === $scope.selectedBook.id;
+                });
+                $scope.books[index] = $scope.selectedBook;
+                $scope.selectedBook = {};
+            };
+        });
+    </script>
+</body>
+
+</html>
